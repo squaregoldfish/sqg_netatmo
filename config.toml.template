@@ -1,0 +1,6 @@
+[netatmo]
+client_id = "CLIENT_ID"
+client_secret = "CLIENT_SECRET"
+username = "USER"
+password = "PASS"
+device = "DEVICE_ID"
