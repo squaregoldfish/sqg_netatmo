@@ -2,14 +2,14 @@ import requests
 import toml
 import netatmo
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 import pytz
 import curses
 import time
 from threading import Thread
 import traceback
 
-UPDATE_INTERVAL = 15 #minutes
+UPDATE_INTERVAL = 10 #minutes
 ERROR = None
 
 def main(stdscr):
@@ -55,10 +55,12 @@ def netatmo_thread(stdscr, config):
       time.sleep(0.1)
       yindex = 0
 
-      stdscr.addstr(yindex, 0, 'Observation time:')
-      stdscr.addstr(yindex, 18, data_json['Kitchen']['time'])
+      observation_time = datetime.strptime(data_json['Kitchen']['time'], '%Y-%m-%d %H:%M:%S%z')
 
-      yindex += 2
+      stdscr.addstr(yindex, 0, 'Observation time:')
+      stdscr.addstr(yindex + 1, 2, observation_time.strftime('%Y-%m-%d %H:%M:%S %Z'))
+
+      yindex += 3
       stdscr.addstr(yindex, 0, 'Temperature')
       for device in data_json:
         if 'temperature' in data_json[device]:
@@ -72,7 +74,7 @@ def netatmo_thread(stdscr, config):
         if 'humidity' in data_json[device]:
           yindex += 1
           stdscr.addstr(yindex, 2, f'{device}: ')
-          stdscr.addstr(yindex, 22, f'{data_json[device]["humidity"]: 3d}  %')
+          stdscr.addstr(yindex, 23, f'{data_json[device]["humidity"]: 3d} %')
 
       yindex = yindex + 2
       stdscr.addstr(yindex, 0, 'Pressure')
@@ -106,9 +108,21 @@ def netatmo_thread(stdscr, config):
           stdscr.addstr(yindex, 2, f'{device}: ')
           stdscr.addstr(yindex, 23, f'{data_json[device]["battery"]: 3d} %')
 
+
+      observation_delta = timedelta(minutes=UPDATE_INTERVAL, seconds=10)
+      next_get_time = observation_time + observation_delta
+      sleep_time = (next_get_time - datetime.now().astimezone()).total_seconds()
+      if sleep_time < 0:
+        sleep_time = 60
+
+      yindex += 2
+      stdscr.addstr(yindex, 0, 'Next retrieval time:')
+      stdscr.addstr(yindex + 1, 2, next_get_time.strftime('%Y-%m-%d %H:%M:%S %Z'))
+
       stdscr.refresh()
 
-      time.sleep(UPDATE_INTERVAL * 60)
+
+      time.sleep(sleep_time)
   except:
     global ERROR
     ERROR = traceback.format_exc()

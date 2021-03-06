@@ -1,0 +1,27 @@
+{
+  "Kitchen": {
+    "time": "2021-03-03 19:25:19+01:00",
+    "temperature": 18.9,
+    "humidity": 54,
+    "pressure": 1025.2,
+    "co2": 568
+  },
+  "Outdoor module": {
+    "time": "2021-03-03 19:24:31+01:00",
+    "battery": 62,
+    "temperature": 4.2,
+    "humidity": 96
+  },
+  "Bedroom": {
+    "time": "2021-03-03 19:25:16+01:00",
+    "battery": 83,
+    "temperature": 20.3,
+    "humidity": 42,
+    "co2": 624
+  },
+  "Rain": {
+    "time": "2021-03-03 19:25:16+01:00",
+    "battery": 89,
+    "rain24": 0.1
+  }
+}
