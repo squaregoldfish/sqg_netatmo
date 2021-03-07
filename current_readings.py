@@ -207,7 +207,7 @@ def get_value(module_data, item):
   try:
     return module_data['dashboard_data'][item]
   except Exception:
-    println(module_data)
+    print(module_data)
     global ERROR
     ERROR = traceback.format_exc()
 
