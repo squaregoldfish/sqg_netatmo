@@ -205,11 +205,13 @@ def get_battery(module_data):
 
 def get_value(module_data, item):
   try:
-    return module_data['dashboard_data'][item]
+    if item in module_data['dashboard_data']:
+      return module_data['dashboard_data'][item]
+    else:
+      return -999
   except Exception:
-    print(module_data)
     global ERROR
-    ERROR = traceback.format_exc()
+    ERROR = f'{module_data}\n{traceback.format_exc()}'
 
 curses.wrapper(main)
 if ERROR is not None:
