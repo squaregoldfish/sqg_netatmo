@@ -41,88 +41,91 @@ def netatmo_thread(stdscr, config):
     station = netatmo.WeatherStation(config['netatmo'])
 
     while True:
-      station.get_data()
-      weather_data = station.devices
-      data_json = build_json(weather_data)
-      with open('weather.json', 'w') as f:
-        json.dump(data_json, f)
+      try:
+        station.get_data()
+        weather_data = station.devices
+        data_json = build_json(weather_data)
+        with open('weather.json', 'w') as f:
+          json.dump(data_json, f)
 
-      #with open('weather.json', 'r') as f:
-      #  data_json = json.load(f)
+        #with open('weather.json', 'r') as f:
+        #  data_json = json.load(f)
 
-      # Now draw the screen
-      stdscr.clear()
-      time.sleep(0.1)
-      yindex = 0
+        # Now draw the screen
+        stdscr.clear()
+        time.sleep(0.1)
+        yindex = 0
 
-      observation_time = datetime.strptime(data_json['Kitchen']['time'], '%Y-%m-%d %H:%M:%S%z')
+        observation_time = datetime.strptime(data_json['Kitchen']['time'], '%Y-%m-%d %H:%M:%S%z')
 
-      stdscr.addstr(yindex, 0, 'Observation time:')
-      stdscr.addstr(yindex + 1, 2, observation_time.strftime('%Y-%m-%d %H:%M:%S %Z'))
+        stdscr.addstr(yindex, 0, 'Observation time:')
+        stdscr.addstr(yindex + 1, 2, observation_time.strftime('%Y-%m-%d %H:%M:%S %Z'))
 
-      yindex += 3
-      stdscr.addstr(yindex, 0, 'Temperature')
-      for device in data_json:
-        if 'temperature' in data_json[device]:
-          yindex += 1
-          stdscr.addstr(yindex, 2, f'{device}: ')
-          stdscr.addstr(yindex, 20, f'{data_json[device]["temperature"]:5.1f} °C')
+        yindex += 3
+        stdscr.addstr(yindex, 0, 'Temperature')
+        for device in data_json:
+          if 'temperature' in data_json[device]:
+            yindex += 1
+            stdscr.addstr(yindex, 2, f'{device}: ')
+            stdscr.addstr(yindex, 20, f'{data_json[device]["temperature"]:5.1f} °C')
 
-      yindex = yindex + 2
-      stdscr.addstr(yindex, 0, 'Humidity')
-      for device in data_json:
-        if 'humidity' in data_json[device]:
-          yindex += 1
-          stdscr.addstr(yindex, 2, f'{device}: ')
-          stdscr.addstr(yindex, 23, f'{data_json[device]["humidity"]: 3d} %')
+        yindex = yindex + 2
+        stdscr.addstr(yindex, 0, 'Humidity')
+        for device in data_json:
+          if 'humidity' in data_json[device]:
+            yindex += 1
+            stdscr.addstr(yindex, 2, f'{device}: ')
+            stdscr.addstr(yindex, 23, f'{data_json[device]["humidity"]: 3d} %')
 
-      yindex = yindex + 2
-      stdscr.addstr(yindex, 0, 'Pressure')
-      for device in data_json:
-        if 'pressure' in data_json[device]:
-          yindex += 1
-          stdscr.addstr(yindex, 2, f'{device}: ')
-          stdscr.addstr(yindex, 19, f'{data_json[device]["pressure"]:6.1f} mb')
+        yindex = yindex + 2
+        stdscr.addstr(yindex, 0, 'Pressure')
+        for device in data_json:
+          if 'pressure' in data_json[device]:
+            yindex += 1
+            stdscr.addstr(yindex, 2, f'{device}: ')
+            stdscr.addstr(yindex, 19, f'{data_json[device]["pressure"]:6.1f} mb')
 
-      yindex = yindex + 2
-      stdscr.addstr(yindex, 0, 'Carbon Dioxide')
-      for device in data_json:
-        if 'co2' in data_json[device]:
-          yindex += 1
-          stdscr.addstr(yindex, 2, f'{device}: ')
-          stdscr.addstr(yindex, 20, f'{data_json[device]["co2"]: 4d} ppm')
+        yindex = yindex + 2
+        stdscr.addstr(yindex, 0, 'Carbon Dioxide')
+        for device in data_json:
+          if 'co2' in data_json[device]:
+            yindex += 1
+            stdscr.addstr(yindex, 2, f'{device}: ')
+            stdscr.addstr(yindex, 20, f'{data_json[device]["co2"]: 4d} ppm')
 
-      yindex = yindex + 2
-      stdscr.addstr(yindex, 0, 'Rain')
-      for device in data_json:
-        if 'rain24' in data_json[device]:
-          yindex += 1
-          stdscr.addstr(yindex, 2, f'{device}: ')
-          stdscr.addstr(yindex, 20, f'{data_json[device]["rain24"]:5.1f} mm')
+        yindex = yindex + 2
+        stdscr.addstr(yindex, 0, 'Rain')
+        for device in data_json:
+          if 'rain24' in data_json[device]:
+            yindex += 1
+            stdscr.addstr(yindex, 2, f'{device}: ')
+            stdscr.addstr(yindex, 20, f'{data_json[device]["rain24"]:5.1f} mm')
 
-      yindex = yindex + 2
-      stdscr.addstr(yindex, 0, 'Battery Levels')
-      for device in data_json:
-        if 'battery' in data_json[device]:
-          yindex += 1
-          stdscr.addstr(yindex, 2, f'{device}: ')
-          stdscr.addstr(yindex, 23, f'{data_json[device]["battery"]: 3d} %')
-
-
-      observation_delta = timedelta(minutes=UPDATE_INTERVAL, seconds=10)
-      next_get_time = observation_time + observation_delta
-      sleep_time = (next_get_time - datetime.now().astimezone()).total_seconds()
-      if sleep_time < 0:
-        sleep_time = 60
-
-      yindex += 2
-      stdscr.addstr(yindex, 0, 'Next retrieval time:')
-      stdscr.addstr(yindex + 1, 2, next_get_time.strftime('%Y-%m-%d %H:%M:%S %Z'))
-
-      stdscr.refresh()
+        yindex = yindex + 2
+        stdscr.addstr(yindex, 0, 'Battery Levels')
+        for device in data_json:
+          if 'battery' in data_json[device]:
+            yindex += 1
+            stdscr.addstr(yindex, 2, f'{device}: ')
+            stdscr.addstr(yindex, 23, f'{data_json[device]["battery"]: 3d} %')
 
 
-      time.sleep(sleep_time)
+        observation_delta = timedelta(minutes=UPDATE_INTERVAL, seconds=10)
+        next_get_time = observation_time + observation_delta
+        sleep_time = (next_get_time - datetime.now().astimezone()).total_seconds()
+        if sleep_time < 0:
+          sleep_time = 60
+
+        yindex += 2
+        stdscr.addstr(yindex, 0, 'Next retrieval time:')
+        stdscr.addstr(yindex + 1, 2, next_get_time.strftime('%Y-%m-%d %H:%M:%S %Z'))
+
+        stdscr.refresh()
+
+
+        time.sleep(sleep_time)
+      except:
+        pass
   except:
     global ERROR
     ERROR = traceback.format_exc()
