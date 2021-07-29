@@ -1,6 +1,7 @@
 import subprocess
 import json
 import sys
+import os
 
 LIMIT=24
 
@@ -14,7 +15,7 @@ with open('weather.json', 'r') as f:
 
 indoor_temp = json['Kitchen']['temperature']
 
-if indoor_temp > LIMIT:
+if indoor_temp > LIMIT or os.path.exists('STOP'):
   boinc_run_mode('never')
 else:
   boinc_run_mode('auto')
