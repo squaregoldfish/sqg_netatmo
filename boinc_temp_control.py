@@ -3,7 +3,7 @@ import json
 import sys
 import os
 
-LIMIT=24
+LIMIT=22
 
 def boinc_run_mode(mode):
   password = sys.argv[1]
