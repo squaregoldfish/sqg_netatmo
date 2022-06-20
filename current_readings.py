@@ -40,6 +40,7 @@ def netatmo_thread(stdscr, config):
   try:
     station = netatmo.WeatherStation(config['netatmo'])
 
+    data_json = None
     while True:
       try:
         station.get_data()
@@ -124,8 +125,10 @@ def netatmo_thread(stdscr, config):
 
 
         time.sleep(sleep_time)
-      except:
-        pass
+      except Exception as e:
+        print(e)
+        print(data_json)
+        time.sleep(300)
   except:
     global ERROR
     ERROR = traceback.format_exc()
@@ -148,7 +151,8 @@ def build_json(data):
   output[get_module_name(station)] = get_module_data(station, timezone)
 
   for module in station['modules']:
-    output[get_module_name(module)] = get_module_data(module, timezone)
+    if module['reachable']:
+      output[get_module_name(module)] = get_module_data(module, timezone)
 
   return output
 
