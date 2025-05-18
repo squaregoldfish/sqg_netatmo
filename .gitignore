@@ -129,7 +129,7 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-config.toml
+*config.toml
 netatmo_weather.json
 STOP
 netatmo_token.json
