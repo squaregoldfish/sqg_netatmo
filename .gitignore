@@ -130,5 +130,6 @@ dmypy.json
 .pyre/
 
 config.toml
-weather.json
+netatmo_weather.json
 STOP
+netatmo_token.json

@@ -7,7 +7,7 @@ verify_ssl = true
 
 [packages]
 requests = "*"
-netatmo = "*"
+requests-oauthlib = "*"
 toml = "*"
 pytz = "*"
 
